@@ -55,7 +55,27 @@ class Model:
         self._cammino_ottimo = []
         self._score_ottimo = 0
 
-        #TODO
+        for node in self._grafo.nodes():
+            parziale = node
+            rimanenti = self.calcola_rimanenti(parziale)
+            self._ricorsione(parziale, rimanenti)
 
         return self._cammino_ottimo, self._score_ottimo
+
+    def _ricorsione(self, parziale, nodi_rimanenti):
+        if len(nodi_rimanenti) == 0:
+            print(parziale)
+        else:
+            for nodo in nodi_rimanenti:
+                parziale.append(nodo)
+                nuovi_rimanenti = self.calcola_rimanenti(parziale)
+                self._ricorsione(parziale, nuovi_rimanenti)
+                parziale.pop()
+
+
+    def calcola_rimanenti(self, parziale):
+        nuovi_rimanenti = []
+        for i in self._grafo.successors(parziale[-1]):
+            nuovi_rimanenti.append(i)
+        return nuovi_rimanenti
 
