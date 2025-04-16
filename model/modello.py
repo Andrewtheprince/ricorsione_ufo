@@ -72,10 +72,25 @@ class Model:
                 self._ricorsione(parziale, nuovi_rimanenti)
                 parziale.pop()
 
-
     def calcola_rimanenti(self, parziale):
         nuovi_rimanenti = []
         for i in self._grafo.successors(parziale[-1]):
-            nuovi_rimanenti.append(i)
+            if self.is_vincolo_ok(parziale, i) and self.is_vincolo_durata_ok(parziale, i):
+                nuovi_rimanenti.append(i)
         return nuovi_rimanenti
+
+    def is_vincolo_durata_ok(self, parziale, nodo:Sighting):
+        return nodo.duration > parziale[-1].duration
+
+    def is_vincolo_ok(self, parziale, nodo:Sighting):
+        mese = nodo.datetime.month
+        counter = 0
+        for i in parziale:
+            if i.datetime.month == mese:
+                counter += 1
+        if counter >= 3:
+            return False
+        else:
+            return True
+
 
